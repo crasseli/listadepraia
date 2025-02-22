@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Presença - Casa de Praia - Família Rasseli</title>
+  <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+  <script src="https://unpkg.com/@netlify/blobs@6.1.0/dist/netlify-blobs.umd.js"></script> <!-- SDK Netlify Blobs -->
+  <style>
+    /* [CSS anterior mantido, sem alterações] */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      background-color: #87CEEB;
+      color: #333;
+    }
+    h1 {
+      color: #007bff;
+      font-size: 2.25rem;
+      font-weight: bold;
+      text-align: center;
+      background-color: #f0f8ff;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #007bff;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    h3 {
+      color: #007bff;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .section {
+      margin-bottom: 30px;
+      position: relative;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #87CEEB;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+    button i {
+      font-size: 1.2em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background-color: #FFD700;
+      color: #333;
+    }
+    .item-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    .item-row input[type="checkbox"] {
+      margin-right: 10px;
+    }
+    .item-row input[type="number"] {
+      width: 100px;
+      margin-left: 10px;
+    }
+    .rateio-table {
+      margin-top: 20px;
+    }
+    .feedback {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #20B2AA;
+      font-weight: bold;
+    }
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .item-container {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      padding: 5px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+    }
+    .item-container input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      margin-top: 4px;
+      margin-right: 10px;
+    }
+    .item-container label {
+      margin-left: 0;
+      flex-grow: 1;
+      word-wrap: break-word;
+    }
+    .days-presente {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .days-presente label {
+      display: flex;
+      align-items: center;
+      padding: 5px 10px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .days-presente input[type="checkbox"] {
+      margin-right: 5px;
+    }
+    .transport-options {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .tooltip {
+      position: relative;
+    }
+    .tooltip::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .tooltip:hover::after {
+      opacity: 1;
+    }
+    .svg-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
+    @media (max-width: 768px) {
+      .items-grid {
+        grid-template-columns: 1fr;
+      }
+      .container {
+        padding: 15px;
+      }
+      h1 {
+        font-size: 1.75rem;
+      }
+      h2 {
+        font-size: 1.25rem;
+      }
+      h3 {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function App() {
+      const [participantes, setParticipantes] = useState([]);
+      const [novoParticipante, setNovoParticipante] = useState({
+        nome: '',
+        itensResponsaveis: [],
+        valoresItens: {},
+        diasPresente: [],
+        transporte: '',
+      });
+      const [feedback, setFeedback] = useState('');
+      const [listaItens] = useState([
+        "5kg: arroz",
+        "5kg: açúcar",
+        "2kg: feijão",
+        "1kg: fubá",
+        "1kg: Canjiquinha",
+        "1kg: farinha",
+        "1 litro de óleo",
+        "500g de café",
+        "Sal",
+        "Alho, cebola, tomate, batata, cenoura, repolho, abobrinha, limão",
+        "6 leites",
+        "4 pães de forma",
+        "Queijo e presunto",
+        "Papel higiênico",
+        "Limpol",
+        "Sal grosso",
+        "2 pentes de ovos",
+        "Papel toalha",
+      ]);
+      const [valorTotalAluguel] = useState(1200);
+
+      // Carregar dados do Netlify Blobs ao montar o componente
+      useEffect(() => {
+        const loadParticipantes = async () => {
+          try {
+            const response = await fetch('/.netlify/functions/get-participantes');
+            const data = await response.json();
+            if (data.participantes) {
+              setParticipantes(data.participantes);
+            }
+          } catch (error) {
+            console.error('Erro ao carregar participantes:', error);
+          }
+        };
+        loadParticipantes();
+      }, []);
+
+      const adicionarParticipante = async () => {
+        if (novoParticipante.nome.trim() === '') {
+          setFeedback("Nome vazio! Preencha o nome do participante.");
+          setTimeout(() => setFeedback(''), 3000);
+          return;
+        }
+        const novosParticipantes = [...participantes, novoParticipante];
+        setParticipantes(novosParticipantes);
+        setFeedback("Participante salvo com sucesso!");
+        setTimeout(() => setFeedback(''), 3000);
+
+        // Salvar no Netlify Blobs via função serverless
+        try {
+          await fetch('/.netlify/functions/save-participantes', {
+            method: 'POST',
+            body: JSON.stringify({ participantes: novosParticipantes }),
+          });
+        } catch (error) {
+          console.error('Erro ao salvar participantes:', error);
+          setFeedback("Erro ao salvar dados!");
+        }
+
+        setNovoParticipante({
+          nome: '',
+          itensResponsaveis: [],
+          valoresItens: {},
+          diasPresente: [],
+          transporte: '',
+        });
+      };
+
+      const editarParticipante = (index) => {
+        const participante = participantes[index];
+        setNovoParticipante(participante);
+        setParticipantes(participantes.filter((_, i) => i !== index));
+      };
+
+      const deletarParticipante = async (index) => {
+        const novosParticipantes = participantes.filter((_, i) => i !== index);
+        setParticipantes(novosParticipantes);
+        setFeedback("Participante excluído!");
+        setTimeout(() => setFeedback(''), 3000);
+
+        // Atualizar no Netlify Blobs
+        try {
+          await fetch('/.netlify/functions/save-participantes', {
+            method: 'POST',
+            body: JSON.stringify({ participantes: novosParticipantes }),
+          });
+        } catch (error) {
+          console.error('Erro ao atualizar participantes:', error);
+          setFeedback("Erro ao atualizar dados!");
+        }
+      };
+
+      const handleCheckboxChange = (item) => {
+        const novosItens = novoParticipante.itensResponsaveis.includes(item)
+          ? novoParticipante.itensResponsaveis.filter((i) => i !== item)
+          : [...novoParticipante.itensResponsaveis, item];
+        setNovoParticipante({ ...novoParticipante, itensResponsaveis: novosItens });
+      };
+
+      const handleValorItemChange = (item, valor) => {
+        const novosValores = { ...novoParticipante.valoresItens, [item]: parseFloat(valor) || 0 };
+        setNovoParticipante({ ...novoParticipante, valoresItens: novosValores });
+      };
+
+      const handleDayClick = (dia) => {
+        const novosDias = novoParticipante.diasPresente.includes(dia)
+          ? novoParticipante.diasPresente.filter((d) => d !== dia)
+          : [...novoParticipante.diasPresente, dia];
+        setNovoParticipante({ ...novoParticipante, diasPresente: novosDias });
+      };
+
+      const calcularRateio = () => {
+        const totalDias = participantes.reduce((acc, p) => acc + p.diasPresente.length, 0);
+        return totalDias > 0
+          ? participantes.map((p) => ({
+              nome: p.nome,
+              valor: ((valorTotalAluguel * p.diasPresente.length) / totalDias).toFixed(2),
+            }))
+          : [];
+      };
+
+      const calcularTotalGastos = () => {
+        return participantes.reduce((total, p) => {
+          return (
+            total +
+            Object.values(p.valoresItens).reduce((soma, valor) => soma + valor, 0)
+          );
+        }, 0);
+      };
+
+      return (
+        <div className="container">
+          <h1>
+            <svg className="svg-icon inline-block" viewBox="0 0 24 24" fill="#FFD700"><path d="M12 2a10 10 0 110 20 10 10 0 010-20zm0 2a8 8 0 100 16 8 8 0 000-16zm0 2a1 1 0 110 2 1 1 0 010-2zm-4 2h8v2H8V8z"/></svg>
+            Lista de Presença - Casa de Praia - Família Rasseli
+            <svg className="svg-icon inline-block" viewBox="0 0 24 24" fill="#20B2AA"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+          </h1>
+          <p className="mt-2 mb-2 text-center">
+            <strong>Endereço da casa de praia:</strong>{' '}
+            <a href="https://maps.app.goo.gl/sfBaiJVCQXGu1AgA9" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+              Clique aqui para ver no mapa
+            </a>
+          </p>
+          <p className="mb-6 text-center">
+            <strong>Datas disponíveis:</strong> 01 à 04 de março de 2025
+          </p>
+
+          <div className="section tooltip" data-tooltip="Adicione participantes com itens, dias e transporte aqui">
+            <h2><i className="fa fa-user-plus mr-2"></i> Adicionar/Editar Participante</h2>
+            <label>Nome:</label>
+            <input
+              type="text"
+              value={novoParticipante.nome}
+              onChange={(e) => setNovoParticipante({ ...novoParticipante, nome: e.target.value })}
+              className="focus:ring-2 focus:ring-blue-500"
+              placeholder="Digite o nome do participante"
+            />
+
+            <label>Itens que vai levar:</label>
+            <div className="items-grid">
+              {listaItens.slice(0, listaItens.length / 2).map((item, index) => (
+                <div key={index} className="item-container">
+                  <input
+                    type="checkbox"
+                    checked={novoParticipante.itensResponsaveis.includes(item)}
+                    onChange={() => handleCheckboxChange(item)}
+                  />
+                  <label>{item}</label>
+                  {novoParticipante.itensResponsaveis.includes(item) && (
+                    <input
+                      type="number"
+                      placeholder={`Valor para ${item}`}
+                      value={novoParticipante.valoresItens[item] || ''}
+                      onChange={(e) => handleValorItemChange(item, e.target.value)}
+                      className="focus:ring-2 focus:ring-blue-500"
+                    />
+                  )}
+                </div>
+              ))}
+              {listaItens.slice(listaItens.length / 2).map((item, index) => (
+                <div key={index} className="item-container">
+                  <input
+                    type="checkbox"
+                    checked={novoParticipante.itensResponsaveis.includes(item)}
+                    onChange={() => handleCheckboxChange(item)}
+                  />
+                  <label>{item}</label>
+                  {novoParticipante.itensResponsaveis.includes(item) && (
+                    <input
+                      type="number"
+                      placeholder={`Valor para ${item}`}
+                      value={novoParticipante.valoresItens[item] || ''}
+                      onChange={(e) => handleValorItemChange(item, e.target.value)}
+                      className="focus:ring-2 focus:ring-blue-500"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <label>Dias presente:</label>
+            <div className="days-presente">
+              {['01/03/2025', '02/03/2025', '03/03/2025', '04/03/2025'].map((dia) => (
+                <label key={dia}>
+                  <input
+                    type="checkbox"
+                    checked={novoParticipante.diasPresente.includes(dia)}
+                    onChange={() => handleDayClick(dia)}
+                  />
+                  {dia} <i className="fa fa-calendar-alt ml-2"></i>
+                </label>
+              ))}
+            </div>
+
+            <label>Meio de transporte:</label>
+            <div className="transport-options">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="transporte"
+                  value="Ônibus"
+                  checked={novoParticipante.transporte === 'Ônibus'}
+                  onChange={(e) => setNovoParticipante({ ...novoParticipante, transporte: e.target.value })}
+                  className="mr-2"
+                />
+                <i className="fa fa-bus mr-2"></i> Ônibus
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="transporte"
+                  value="Uber"
+                  checked={novoParticipante.transporte === 'Uber'}
+                  onChange={(e) => setNovoParticipante({ ...novoParticipante, transporte: e.target.value })}
+                  className="mr-2"
+                />
+                <i className="fa fa-taxi mr-2"></i> Uber
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="transporte"
+                  value="Carro próprio"
+                  checked={novoParticipante.transporte === 'Carro próprio'}
+                  onChange={(e) => setNovoParticipante({ ...novoParticipante, transporte: e.target.value })}
+                  className="mr-2"
+                />
+                <i className="fa fa-car mr-2"></i> Carro próprio
+              </label>
+            </div>
+
+            <button onClick={adicionarParticipante} className="mt-4">
+              <i className="fa fa-save mr-2"></i> Salvar Participante
+            </button>
+            {feedback && <div className="feedback">{feedback}</div>}
+          </div>
+
+          <div className="section tooltip" data-tooltip="Veja todos os participantes adicionados">
+            <h2><i className="fa fa-list mr-2"></i> Lista de Participantes</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Itens Responsáveis</th>
+                  <th>Valores Pagos</th>
+                  <th>Dias Presente</th>
+                  <th>Transporte</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {participantes.map((p, index) => (
+                  <tr key={index}>
+                    <td>{p.nome}</td>
+                    <td>{p.itensResponsaveis.join(', ')}</td>
+                    <td>
+                      {Object.entries(p.valoresItens).map(([item, valor]) => (
+                        <div key={item}>
+                          {item}: R$ {valor.toFixed(2)}
+                        </div>
+                      ))}
+                    </td>
+                    <td>{p.diasPresente.join(', ')}</td>
+                    <td>{p.transporte}</td>
+                    <td>
+                      <button title="Editar" onClick={() => editarParticipante(index)} className="mr-2">
+                        <i className="fa fa-pen"></i>
+                      </button>
+                      <button title="Excluir" onClick={() => deletarParticipante(index)}>
+                        <i className="fa fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="section tooltip" data-tooltip="Resumo dos gastos e rateio do aluguel">
+            <h2><i className="fa fa-money-bill mr-2"></i> Resumo Financeiro</h2>
+            <p className="mb-2">
+              <strong>Total Gasto em Compras:</strong> R$ {calcularTotalGastos().toFixed(2)}
+            </p>
+            <p className="mb-4">
+              <strong>Valor Total do Aluguel:</strong> R$ {valorTotalAluguel.toFixed(2)}
+            </p>
+            <h3>Rateio do Aluguel</h3>
+            <table className="rateio-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Valor a Pagar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {calcularRateio().map((r, index) => (
+                  <tr key={index}>
+                    <td>{r.nome}</td>
+                    <td>R$ {r.valor}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
